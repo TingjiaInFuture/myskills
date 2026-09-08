@@ -1,0 +1,88 @@
+## 核心方案：文件保存知识，SQLite 负责检索
+
+不把知识库改造成一套复杂系统，而是保留原来的 `brief.txt`、`experience.md` 和存档目录，只替换检索入口：
+
+```text
+任务 → 提炼关键词 → SQLite FTS5 → 加权排序 → 预算内的 Top-K JSON → AI
+
+brief.txt 新增/修改/删除 → sync 存档ID → 更新 SQLite 索引
+```
+
+**运行时只有一个 `kb.py`，无需 pip 安装依赖、Embedding、向量数据库、服务器或 API Key。** 需要 Python 3.10+，以及该 Python 所链接 SQLite 的 FTS5 支持。
+
+最重要的设计是：**不让 AI 读取全量索引，也不在每次搜索前扫描整个知识库。**
+
+| 问题              | 已实现的处理                                   |
+| --------------- | ---------------------------------------- |
+| `INDEX.md` 越来越大 | 完全退出 AI 检索流程；旧文件可以保留，程序不会读写它             |
+| 查询时读取大量 brief   | 只查询 SQLite，仅为 Top-K 生成摘要和相关片段            |
+| 中文没有空格，短词难检索    | 中文单字、双字预处理；多字词要求片段连续，避免散落字符误命中           |
+| 候选相关性排序         | 标题、关键词、摘要、经验要点采用 **8 / 6 / 3 / 1** 字段权重  |
+| 新增、修改、删除后的维护    | 支持定向同步、全库增量对账、强制哈希检查和事务性重建               |
+| 返回内容仍可能过多       | 对完整 UTF-8 JSON 设置字节上限，保持合法 JSON，不直接截断字符串 |
+
+排序直接由 FTS5 的加权 BM25 完成，而不是先随便取一批文档，再由 Python 猜测“全局 Top-K”。SQLite 原生提供字段加权和按相关度排序能力。([sqlite.org][1])
+
+## 直接使用
+
+解压并进入仓库后：
+
+```bash
+cd task-knowledge-sqlite
+
+# 首次导入现有知识库；保留原 brief.txt 格式。
+python -S kb.py --root ~/knowledge init
+
+# 日常关键词查询：最多5条，完整输出不超过6000字节。
+python -S kb.py --root ~/knowledge search \
+  "powershell 批量重命名 编码" \
+  -k 5 --budget-bytes 6000
+```
+
+搜索结果包含 `id、title、path、summary、snippet、matched`。选定候选后，用 `get ID` 读取该条 brief；确实需要细节时，再用 `get ID --section experience`。修改源文件后执行 `sync ID`，其中 ID 就是存档文件夹名。
+
+要先验证功能、不接触自己的知识库，可以运行随包示例：
+
+```bash
+python -S kb.py --root examples/knowledge init
+python -S kb.py --root examples/knowledge search "sqlite 中文 检索" --mode all
+python -S kb.py --root examples/knowledge get sqlite-chinese-search
+python -S kb.py --root examples/knowledge doctor
+```
+
+这里的 `-S` 是可选性能优化，用于跳过 Python 的 `site` 初始化；普通 `python kb.py ...` 同样兼容。([Python documentation][2])
+
+新版 **`SKILL.md` 已完整改好**，保留存档、检索、更新、复用四条工作流，并明确要求“搜索拿候选、按需读详情、写完后定向同步”。
+
+## 实测结果
+
+在本次环境的 **10,000 条中英文合成存档**上，测得：
+
+| 项目                       |           实测 |
+| ------------------------ | -----------: |
+| 首次建立索引                   |       6.58 秒 |
+| 无变化的全库增量对账               |      0.757 秒 |
+| 定向同步一条修改                 |       3.3 毫秒 |
+| 主题查询 SQL 中位数             |      1.65 毫秒 |
+| 完整 `python -S` CLI 查询中位数 |    **85 毫秒** |
+| 主题查询 Top-5 完整 JSON       | **1,919 字节** |
+
+同一组合成资料按旧模板生成的全量索引为 **1,231,890 字节**。本次主题查询的检索输出相较读取全量索引，减少约 **99.84% 的输入字节**。
+
+**这是字节对比，不是精确 token 计数，也不是所有知识库的性能承诺。** SQL 微基准与完整 CLI 耗时分别测量，原始数据、样本数量及限制已写入 [实测报告](sandbox:/mnt/data/task-knowledge-sqlite/docs/BENCHMARK.md)。
+
+同时，**44 项测试全部通过**；ZIP 解压后又重新执行了测试、示例检索和 Git 完整性检查。实际验证环境是 Linux / Python 3.13.5；Windows、macOS 的 CI 配置已附带，但尚未实跑。
+
+## 三个边界需要明确
+
+**同步是显式的。** 外部修改 brief 后必须 `sync ID`；批量修改或 Git 切换后执行 `sync`。否则搜索使用旧快照。这是为了避免把全库扫描偷偷塞回每次查询。
+
+**它是关键词检索，不是语义检索。** 建议 AI 先提取 3–8 个关键词，并在 brief 中维护中英文别名。没有词面交集的相似经验可能漏召回；本次没有真实历史查询集，因此不宣称权重或召回质量已达到全局最优。
+
+**一个 SQLite 指一个逻辑数据库。** WAL 模式运行时可能产生 `-wal`、`-shm` 辅助文件；数据库应放本机磁盘，知识资料在 NAS 或同步目录时，可以用 `--db` 将索引单独放在本机缓存目录。([SQLite][3])
+
+仓库包含完整源码、新版 Skill、兼容模板、示例、测试、基准脚本和中文设计/迁移说明。**已有知识无需重排，首次 `init` 后，日常操作就收敛为：查询用 `search`，改资料后用 `sync ID`。**
+
+[1]: https://www.sqlite.org/fts5.html "SQLite FTS5 Extension"
+[2]: https://docs.python.org/3/using/cmdline.html "https://docs.python.org/3/using/cmdline.html"
+[3]: https://www.sqlite.org/wal.html "https://www.sqlite.org/wal.html"

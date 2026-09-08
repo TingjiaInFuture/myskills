@@ -1,0 +1,147 @@
+{
+  "created_at_utc": "2026-09-08T02:39:33.909202+00:00",
+  "dataset": "synthetic 10-topic Chinese/English briefs, not a relevance benchmark",
+  "environment": {
+    "python": "3.13.5",
+    "sqlite": "3.46.1",
+    "platform": "Linux-6.18.35-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "logical_cpu_count": 5,
+    "storage": "container temporary directory; OS cache not flushed"
+  },
+  "documents": 10000,
+  "generation_seconds": 1.5787,
+  "initial_sync_seconds": 6.5841,
+  "initial_sync": {
+    "added": 10000,
+    "updated": 0,
+    "deleted": 0,
+    "unchanged": 0,
+    "rehashed": 10000,
+    "documents": 10000,
+    "index_updated_at": "2026-09-08T02:39:10.263374+00:00"
+  },
+  "unchanged_scan_seconds": 0.757,
+  "unchanged_scan": {
+    "added": 0,
+    "updated": 0,
+    "deleted": 0,
+    "unchanged": 10000,
+    "rehashed": 0,
+    "documents": 10000,
+    "index_updated_at": "2026-09-08T02:39:16.844571+00:00"
+  },
+  "single_update_seconds": 0.0033,
+  "single_update": {
+    "added": 0,
+    "updated": 1,
+    "deleted": 0,
+    "unchanged": 0,
+    "rehashed": 1,
+    "documents": 10000,
+    "index_updated_at": "2026-09-08T02:39:17.601396+00:00"
+  },
+  "source_brief_bytes": 5693780,
+  "database_bytes": 41439232,
+  "legacy_index_bytes": 1231890,
+  "queries": {
+    "selective": {
+      "query": "needle9999",
+      "matching_documents": 1,
+      "sql_warm_ms": {
+        "median": 0.063,
+        "p95": 0.198,
+        "samples": 30
+      },
+      "python_api_ms": {
+        "median": 0.79,
+        "p95": 4.866,
+        "samples": 30
+      },
+      "fresh_cli_default_ms": {
+        "median": 826.65,
+        "p95": 1129.343,
+        "samples": 5
+      },
+      "fresh_cli_no_site_ms": {
+        "median": 71.288,
+        "p95": 141.498,
+        "samples": 5
+      },
+      "output_bytes": 403
+    },
+    "topic": {
+      "query": "sqlite 中文检索",
+      "matching_documents": 1000,
+      "sql_warm_ms": {
+        "median": 1.646,
+        "p95": 1.834,
+        "samples": 30
+      },
+      "python_api_ms": {
+        "median": 3.075,
+        "p95": 3.761,
+        "samples": 30
+      },
+      "fresh_cli_default_ms": {
+        "median": 897.426,
+        "p95": 1140.408,
+        "samples": 5
+      },
+      "fresh_cli_no_site_ms": {
+        "median": 85.174,
+        "p95": 96.785,
+        "samples": 5
+      },
+      "output_bytes": 1919
+    },
+    "broad": {
+      "query": "shared",
+      "matching_documents": 10000,
+      "sql_warm_ms": {
+        "median": 11.256,
+        "p95": 19.247,
+        "samples": 30
+      },
+      "python_api_ms": {
+        "median": 12.517,
+        "p95": 17.851,
+        "samples": 30
+      },
+      "fresh_cli_default_ms": {
+        "median": 882.158,
+        "p95": 1109.925,
+        "samples": 5
+      },
+      "fresh_cli_no_site_ms": {
+        "median": 82.482,
+        "p95": 112.307,
+        "samples": 5
+      },
+      "output_bytes": 1561
+    }
+  },
+  "query_plan": [
+    [
+      5,
+      0,
+      0,
+      "SCAN docs_fts VIRTUAL TABLE INDEX 32:M4"
+    ],
+    [
+      10,
+      0,
+      0,
+      "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)"
+    ]
+  ],
+  "notes": [
+    "SQL timers reuse one connection and warm caches.",
+    "API timers include connection setup and result snippets.",
+    "CLI timers include a fresh Python process, connection, query, and UTF-8 JSON output.",
+    "-S disables site initialization; the application has only standard-library dependencies.",
+    "Byte counts are not model-specific token counts.",
+    "A ubiquitous term can require scoring most/all matching documents; LIMIT is not O(1).",
+    "No cold-cache or retrieval-quality claim is made."
+  ]
+}

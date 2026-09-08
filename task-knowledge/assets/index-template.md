@@ -1,9 +1,11 @@
-# 知识库索引
+# 旧版索引说明
 
-> 检索入口：先扫本文件定位候选，再读对应文件夹的 brief.txt 复核相关度。
-> 维护规则：新增/更新/合并/删除存档后，必须同步本文件对应行；保持一行一条，便于 grep。
+v2 不再使用 INDEX.md 作为 AI 检索入口，也不要求维护此文件。
 
-## 存档列表
+旧 INDEX.md 可以保留作人工笔记；工具不会读取、改写或删除它。
+迁移依据是 KB_ROOT/*/brief.txt，而不是这里的条目。
 
-<!-- 行格式：- <存档文件夹名> — <一句话摘要> 【关键词: k1, k2, k3】 -->
-<!-- 示例：　- powershell-batch-rename — 用 PowerShell 批量重命名并规避中文文件名编码坑 【关键词: powershell, rename, 编码, 批量】 -->
+```bash
+python -S /实际路径/kb.py --root ~/knowledge init
+python -S /实际路径/kb.py --root ~/knowledge search "关键词 短语" -k 5
+```

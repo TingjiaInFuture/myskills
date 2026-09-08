@@ -1,0 +1,23 @@
+name: test
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  stdlib-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -S -m unittest discover -s tests -v
+      - run: python -S kb.py --root examples/knowledge init
+      - run: python -S kb.py --root examples/knowledge search "sqlite 中文 检索" -k 3
+      - run: python -S kb.py --root examples/knowledge doctor

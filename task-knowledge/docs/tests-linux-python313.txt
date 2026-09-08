@@ -1,0 +1,49 @@
+test_end_to_end_json_stdout_and_exit_codes (test_kb.CLITests.test_end_to_end_json_stdout_and_exit_codes) ... ok
+test_any_all_and_mixed_script (test_kb.KBTests.test_any_all_and_mixed_script) ... ok
+test_argument_limits (test_kb.KBTests.test_argument_limits) ... ok
+test_budget_json_including_escaping_and_utf8 (test_kb.KBTests.test_budget_json_including_escaping_and_utf8) ... ok
+test_chinese_phrase_requires_adjacency (test_kb.KBTests.test_chinese_phrase_requires_adjacency) ... ok
+test_concurrent_writers (test_kb.KBTests.test_concurrent_writers) ... ok
+test_crud_rename_and_integrity (test_kb.KBTests.test_crud_rename_and_integrity) ... ok
+test_directory_name_is_searchable (test_kb.KBTests.test_directory_name_is_searchable) ... ok
+test_empty_and_missing_index (test_kb.KBTests.test_empty_and_missing_index) ... ok
+test_error_rolls_back_whole_sync (test_kb.KBTests.test_error_rolls_back_whole_sync) ... ok
+test_explicit_freshness_and_get_reads_live_file (test_kb.KBTests.test_explicit_freshness_and_get_reads_live_file) ... ok
+test_external_local_database (test_kb.KBTests.test_external_local_database) ... ok
+test_file_changed_during_read_is_rejected (test_kb.KBTests.test_file_changed_during_read_is_rejected) ... ok
+test_force_hash_detects_same_size_preserved_mtime (test_kb.KBTests.test_force_hash_detects_same_size_preserved_mtime) ... ok
+test_fts_and_sql_special_characters_are_not_executable (test_kb.KBTests.test_fts_and_sql_special_characters_are_not_executable) ... ok
+test_get_budget_and_live_paths (test_kb.KBTests.test_get_budget_and_live_paths) ... ok
+test_han_substrings_two_chars_single_and_supplementary (test_kb.KBTests.test_han_substrings_two_chars_single_and_supplementary) ... ok
+test_legacy_index_is_ignored_and_sources_unchanged (test_kb.KBTests.test_legacy_index_is_ignored_and_sources_unchanged) ... ok
+test_missing_fts5_has_actionable_error (test_kb.KBTests.test_missing_fts5_has_actionable_error) ... ok
+test_non_han_exact_tokens_and_normalization (test_kb.KBTests.test_non_han_exact_tokens_and_normalization) ... ok
+test_oversize_rejected_without_partial_index (test_kb.KBTests.test_oversize_rejected_without_partial_index) ... ok
+test_path_traversal_rejected (test_kb.KBTests.test_path_traversal_rejected) ... ok
+test_read_connection_rejects_writes (test_kb.KBTests.test_read_connection_rejects_writes) ... ok
+test_reader_snapshot_while_writing (test_kb.KBTests.test_reader_snapshot_while_writing) ... ok
+test_rebuild_and_rollback (test_kb.KBTests.test_rebuild_and_rollback) ... ok
+test_search_does_not_scan_or_read_knowledge_files (test_kb.KBTests.test_search_does_not_scan_or_read_knowledge_files) ... ok
+test_skip_metadata_references_experience_and_assets (test_kb.KBTests.test_skip_metadata_references_experience_and_assets) ... ok
+test_status_filter_before_top_k (test_kb.KBTests.test_status_filter_before_top_k) ... ok
+test_status_only_edit_is_synced (test_kb.KBTests.test_status_only_edit_is_synced) ... ok
+test_symlink_archive_not_imported (test_kb.KBTests.test_symlink_archive_not_imported) ... ok
+test_symlink_brief_rejected (test_kb.KBTests.test_symlink_brief_rejected) ... ok
+test_symlink_database_rejected (test_kb.KBTests.test_symlink_database_rejected) ... ok
+test_target_sync_is_local_and_deduplicated (test_kb.KBTests.test_target_sync_is_local_and_deduplicated) ... ok
+test_timestamp_only_change_does_not_rewrite_fts (test_kb.KBTests.test_timestamp_only_change_does_not_rewrite_fts) ... ok
+test_unchanged_does_not_read_contents (test_kb.KBTests.test_unchanged_does_not_read_contents) ... ok
+test_weights_title_keywords_above_body (test_kb.KBTests.test_weights_title_keywords_above_body) ... ok
+test_wrong_database_not_modified (test_kb.KBTests.test_wrong_database_not_modified) ... ok
+test_wrong_root_rejected (test_kb.KBTests.test_wrong_root_rejected) ... ok
+test_case_width_accents_code_and_dedup (test_kb.TokenizerTests.test_case_width_accents_code_and_dedup) ... ok
+test_han_bigram_and_unigram (test_kb.TokenizerTests.test_han_bigram_and_unigram) ... ok
+test_header_original_bom_crlf (test_kb.TokenizerTests.test_header_original_bom_crlf) ... ok
+test_metadata_english_and_unknown_status (test_kb.TokenizerTests.test_metadata_english_and_unknown_status) ... ok
+test_query_caps_and_validation (test_kb.TokenizerTests.test_query_caps_and_validation) ... ok
+test_references_and_history_excluded (test_kb.TokenizerTests.test_references_and_history_excluded) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 4.231s
+
+OK
